@@ -55,9 +55,11 @@ namespace Hitchhike.Services
 			return toReturn;
 		}
 
-		public async Task<IEnumerable<PlaceViewModel>> GetPlacesFromArea(int id)
+		public async Task<IEnumerable<PlaceViewModel>> GetPlacesFromArea(float lat, float lon, float range)
 		{
-			Task<string> getPlaceTask = HttpHelper.GetAsync(hitchWikiURI + "?place=" + id);
+			string url = BoundsHelper.GetBounds(lat, lon, range);
+
+			Task<string> getPlaceTask = HttpHelper.GetAsync(hitchWikiURI + url);
 			string result = await getPlaceTask;
 
 			IEnumerable<PlaceViewModel> toReturn = new List<PlaceViewModel>();
