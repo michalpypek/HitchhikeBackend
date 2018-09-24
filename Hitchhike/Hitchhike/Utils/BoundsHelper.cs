@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -28,7 +29,7 @@ namespace Hitchhike.Utils
 			CheckLongitude(ref minLongitude);
 			CheckLongitude(ref maxLongitude);
 
-			return string.Format("?bounds={0},{1},{2},{3}", minLatitude, maxLatitude, minLongitude, maxLongitude);
+			return string.Format("?bounds={0},{1},{2},{3}", minLatitude.ToString(CultureInfo.InvariantCulture), maxLatitude.ToString(CultureInfo.InvariantCulture), minLongitude.ToString(CultureInfo.InvariantCulture), maxLongitude.ToString(CultureInfo.InvariantCulture));
 		}
 
 

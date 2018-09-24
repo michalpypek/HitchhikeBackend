@@ -120,9 +120,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\PlaceDotViewModel.cs" />
+    <Compile Include="Models\PlaceHitchWikiModel.cs" />
     <Compile Include="Models\PlaceViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\PlacesRepository.cs" />
+    <Compile Include="Utils\BoundsHelper.cs" />
     <Compile Include="Utils\HttpHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +134,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Properties\PublishProfiles\Hitchhike - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\Hitchhike - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

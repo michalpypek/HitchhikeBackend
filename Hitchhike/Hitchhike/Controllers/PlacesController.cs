@@ -1,4 +1,5 @@
-﻿using Hitchhike.Services;
+﻿using Hitchhike.Models;
+using Hitchhike.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,31 +25,27 @@ namespace Hitchhike.Controllers
 		}
 
         // GET: api/Places
-        public async Task<string> Get()
+        public async Task<IHttpActionResult> Get()
         {
 			string result = await _placesRepository.GetTestPlace();
-            return result;
+            return Json(result);
         }
 
         // GET: api/Places/5
-        public string Get(int id)
+
+        public async Task<IHttpActionResult> Get(int id)
         {
-            return "value";
+			var result = await _placesRepository.GetPlace(id);
+            return Json(result);
         }
 
-        // POST: api/Places
-        public void Post([FromBody]string value)
-        {
-        }
+		[HttpGet]
+		public async Task<IHttpActionResult> GetByLocation(float lat, float lon, float range = 3000)
+		{
+			var result = await _placesRepository.GetPlacesFromArea(lat, lon, range);
 
-        // PUT: api/Places/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+			return Json(result);
+		}
 
-        // DELETE: api/Places/5
-        public void Delete(int id)
-        {
-        }
     }
 }

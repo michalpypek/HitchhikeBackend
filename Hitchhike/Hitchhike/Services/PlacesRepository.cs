@@ -35,12 +35,8 @@ namespace Hitchhike.Services
 		{
 			Task<string> getPlaceTask = HttpHelper.GetAsync(hitchWikiURI + "?place=" + id);
 			string result = await getPlaceTask;
-
-			PlaceViewModel toReturn = null;
-
-			if(!string.IsNullOrEmpty(result))
-				toReturn = Newtonsoft.Json.JsonConvert.DeserializeObject<PlaceViewModel>(result);
-			return toReturn;
+			
+			return StringToViewModel(result);
 		}
 
 		public async Task<PlaceViewModel> GetPlaceDot(int id)
@@ -48,11 +44,14 @@ namespace Hitchhike.Services
 			Task<string> getPlaceTask = HttpHelper.GetAsync(string.Format("{0}?place={1}&dot", hitchWikiURI, id));
 			string result = await getPlaceTask;
 
-			PlaceViewModel toReturn = null;
-
 			if (!string.IsNullOrEmpty(result))
-				toReturn = Newtonsoft.Json.JsonConvert.DeserializeObject<PlaceViewModel>(result);
-			return toReturn;
+			{
+				PlaceHitchWikiModel hitchModel = Newtonsoft.Json.JsonConvert.DeserializeObject<PlaceHitchWikiModel>(result);
+				PlaceViewModel toReturn = new PlaceViewModel(hitchModel);
+				return toReturn;
+			}
+
+			return null;
 		}
 
 		public async Task<IEnumerable<PlaceViewModel>> GetPlacesFromArea(float lat, float lon, float range)
@@ -62,11 +61,7 @@ namespace Hitchhike.Services
 			Task<string> getPlaceTask = HttpHelper.GetAsync(hitchWikiURI + url);
 			string result = await getPlaceTask;
 
-			IEnumerable<PlaceViewModel> toReturn = new List<PlaceViewModel>();
-
-			if (!string.IsNullOrEmpty(result))
-				toReturn = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<PlaceViewModel>>(result);
-			return toReturn;
+			return StringToViewModels(result);
 		}
 
 		public async Task<IEnumerable<PlaceViewModel>> GetPlacesFromCity(string cityName)
@@ -74,11 +69,7 @@ namespace Hitchhike.Services
 			Task<string> getPlaceTask = HttpHelper.GetAsync(string.Format("{0}?city={1}", hitchWikiURI, cityName));
 			string result = await getPlaceTask;
 
-			IEnumerable<PlaceViewModel> toReturn = new List<PlaceViewModel>();
-
-			if (!string.IsNullOrEmpty(result))
-				toReturn = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<PlaceViewModel>>(result);
-			return toReturn;
+			return StringToViewModels(result);
 		}
 
 		public async Task<IEnumerable<PlaceViewModel>> GetPlacesFromCountry(string countryCode)
@@ -86,11 +77,7 @@ namespace Hitchhike.Services
 			Task<string> getPlaceTask = HttpHelper.GetAsync(string.Format("{0}?country={1}", hitchWikiURI, countryCode));
 			string result = await getPlaceTask;
 
-			IEnumerable<PlaceViewModel> toReturn = new List<PlaceViewModel>();
-
-			if (!string.IsNullOrEmpty(result))
-				toReturn = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<PlaceViewModel>>(result);
-			return toReturn;
+			return StringToViewModels(result);
 		}
 
 		public async Task<IEnumerable<PlaceViewModel>> GetPlacesFromContinent(string continentCode)
@@ -98,10 +85,34 @@ namespace Hitchhike.Services
 			Task<string> getPlaceTask = HttpHelper.GetAsync(string.Format("{0}?continent={1}", hitchWikiURI, continentCode));
 			string result = await getPlaceTask;
 
-			IEnumerable<PlaceViewModel> toReturn = new List<PlaceViewModel>();
+			return StringToViewModels(result);
+		}
 
-			if (!string.IsNullOrEmpty(result))
-				toReturn = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<PlaceViewModel>>(result);
+		private PlaceViewModel StringToViewModel(string toParse)
+		{
+			if (!string.IsNullOrEmpty(toParse))
+			{
+				PlaceHitchWikiModel hitchModel = Newtonsoft.Json.JsonConvert.DeserializeObject<PlaceHitchWikiModel>(toParse);
+				PlaceViewModel toReturn = new PlaceViewModel(hitchModel);
+				return toReturn;
+			}
+
+			return null;
+		}
+
+		private IEnumerable<PlaceViewModel> StringToViewModels(string toParse)
+		{
+			List<PlaceViewModel> toReturn = new List<PlaceViewModel>();
+
+			if (!string.IsNullOrEmpty(toParse))
+			{
+				IEnumerable<PlaceHitchWikiModel> hitchModels = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<PlaceHitchWikiModel>>(toParse);
+				foreach (var wikiModel in hitchModels)
+				{
+					toReturn.Add(new PlaceViewModel(wikiModel));
+				}
+			}
+
 			return toReturn;
 		}
 	}
